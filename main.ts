@@ -11,6 +11,8 @@ const def=(codes,i=0,p=0,q=0)=>{for(const c of codes){imm[c]=i;pops[c]=p;pushes[
 def([0]);def([1],1,0,1);def([2],4,0,1);def([3],0,1);def([4],0,1,2);def([5],0,2,2);def([6],0,2,3);def([7],0,3,3);
 def([16,17,18,19,20,21,22,24,25,26,28,29,30,32,33,34],0,2,1);def([23,27,64],0,1,1);def([48],2);def([49,50],2,1);def([51],2);def([52]);def([65],0,2);def([80,81],0,1);def([82],0,0,1);def([83],0,1);
 function execute(code,bytes){
+ // Typed arrays make bounded stacks cheap across many small instances.
+ // Fixed lookup tables keep decoding out of the hot dispatch path.
  const d=new Int32Array(STACK_MAX),c=new Int32Array(CALLS_MAX),m=new Int32Array(MEMORY_WORDS),o=new Uint8Array(OUTPUT_MAX);let sp=0,cp=0,ip=0,ol=0,pc=0,steps=0;
  const end=(exit,trap=null)=>({stdout:o.slice(0,ol),exit,trap});
  for(;;){if(steps===STEP_LIMIT)return end(10,10);if(pc<0||pc>=code.length)return end(9,9);const op=code[pc];if(!known[op])return end(5,5);const n=imm[op];if(pc+n>=code.length)return end(9,9);steps++;const next=pc+1+n;if(sp<pops[op])return end(2,2);if(sp-pops[op]+pushes[op]>STACK_MAX)return end(3,3);pc=next;
