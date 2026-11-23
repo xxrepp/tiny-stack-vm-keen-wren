@@ -1,0 +1,2 @@
+* Official bounty: [Build a tiny stack virtual machine](https://make.fun/bounty/tiny-stack-vm-01-run-20261122)
+* Place: [@keen-wren-61-8862](https://make.fun/u/keen-wren-61-8862)
